@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - COVID Essentials Store</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            background: #f8fafc;
+            padding-top: 90px;
+            padding-bottom: 2rem;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .profile-header-content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-upload:hover {
+            background: #059669;
+            transform: scale(1.1);
+        }
+
+        .profile-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .profile-nav {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-nav-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-nav-item {
+            padding: 12px 20px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .profile-nav-item:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .profile-nav-item.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .profile-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .form-group input[readonly] {
+            background: #f9fafb;
+            color: #6b7280;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        .orders-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            border-color: #3b82f6;
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-confirmed { background: #d1fae5; color: #065f46; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-detail {
+            text-align: center;
+        }
+
+        .order-detail-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-detail-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .order-items {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+        }
+
+        .order-items h4 {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .bookings-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .booking-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            border-color: #10b981;
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .booking-service {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .booking-detail {
+            text-align: center;
+        }
+
+        .security-section {
+            border: 2px solid #fbbf24;
+            background: #fffbeb;
+        }
+
+        .security-warning {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .security-warning i {
+            color: #d97706;
+            font-size: 1.25rem;
+        }
+
+        .preferences-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .preference-group {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .preference-group h4 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .danger-zone {
+            border: 2px solid #ef4444;
+            background: #fef2f2;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .danger-zone h4 {
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .danger-zone p {
+            color: #7f1d1d;
+            margin-bottom: 1rem;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            .profile-nav-list {
+                justify-content: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-details,
+            .booking-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="logo-text">
+                        <h1>COVID Essentials</h1>
+                        <p>Stay Safe, Stay Home</p>
+                    </div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#products">Products</a>
+                    <a href="index.html#services">Services</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="cart-btn" onclick="window.location.href='index.html'">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <div class="auth-buttons">
+                        <!-- Auth buttons will be populated by JavaScript -->
+                    </div>
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html">Home</a>
+            <a href="index.html#products">Products</a>
+            <a href="index.html#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="container">
+                <div class="profile-header-content">
+                    <div class="profile-avatar" onclick="triggerAvatarUpload()">
+                        <i class="fas fa-user" id="avatarIcon"></i>
+                        <div class="avatar-upload">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="profile-info">
+                        <h1 id="profileName">Loading...</h1>
+                        <p id="profileEmail">Loading...</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalOrders">0</span>
+                                <span class="stat-label">Orders</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="totalBookings">0</span>
+                                <span class="stat-label">Bookings</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="memberSince">2024</span>
+                                <span class="stat-label">Member Since</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Profile Navigation -->
+            <div class="profile-nav">
+                <div class="profile-nav-list">
+                    <button class="profile-nav-item active" onclick="showProfileSection('personal')">
+                        <i class="fas fa-user"></i>
+                        Personal Info
+                    </button>
+                    <button class="profile-nav-item" onclick="showProfileSection('orders')">
+                        <i class="fas fa-shopping-bag"></i>
+                        My Orders
+                    </button>
+                    <button class="profile-nav-item" onclick="showProfileSection('bookings')">
+                        <i class="fas fa-calendar"></i>
+                        My Bookings
+                    </button>
+                    <button class="profile-nav-item" onclick="showProfileSection('addresses')">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Addresses
+                    </button>
+                    <button class="profile-nav-item" onclick="showProfileSection('security')">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </button>
+                    <button class="profile-nav-item" onclick="showProfileSection('preferences')">
+                        <i class="fas fa-cog"></i>
+                        Preferences
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="profile-content">
+                <!-- Personal Information -->
+                <div id="personal" class="profile-section active">
+                    <h2 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Personal Information
+                    </h2>
+                    <form id="personalInfoForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="tel" id="phoneNumber" name="phoneNumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="emergencyContact">Emergency Contact</label>
+                                <input type="tel" id="emergencyContact" name="emergencyContact">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetPersonalForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- My Orders -->
+                <div id="orders" class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-shopping-bag"></i>
+                        My Orders
+                    </h2>
+                    <div class="orders-grid" id="ordersContainer">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- My Bookings -->
+                <div id="bookings" class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-calendar"></i>
+                        My Bookings
+                    </h2>
+                    <div class="bookings-grid" id="bookingsContainer">
+                        <!-- Bookings will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div id="addresses" class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Saved Addresses
+                    </h2>
+                    <form id="addressForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="addressLine1">Address Line 1</label>
+                                <input type="text" id="addressLine1" name="addressLine1">
+                            </div>
+                            <div class="form-group">
+                                <label for="addressLine2">Address Line 2 (Optional)</label>
+                                <input type="text" id="addressLine2" name="addressLine2">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Province</label>
+                                <input type="text" id="state" name="state">
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">ZIP/Postal Code</label>
+                                <input type="text" id="zipCode" name="zipCode">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country" name="country">
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="AU">Australia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetAddressForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary">Save Address</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Security -->
+                <div id="security" class="profile-section security-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Security Settings
+                    </h2>
+                    
+                    <div class="security-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Important:</strong> Keep your account secure by using a strong password and enabling two-factor authentication.
+                        </div>
+                    </div>
+
+                    <form id="passwordForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="twoFactorAuth">Two-Factor Authentication</label>
+                                <select id="twoFactorAuth" name="twoFactorAuth">
+                                    <option value="disabled">Disabled</option>
+                                    <option value="sms">SMS</option>
+                                    <option value="email">Email</option>
+                                    <option value="app">Authenticator App</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Update Security</button>
+                        </div>
+                    </form>
+
+                    <div class="danger-zone">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+                        <p>Once you delete your account, there is no going back. Please be certain.</p>
+                        <button class="btn-danger" onclick="confirmDeleteAccount()">
+                            <i class="fas fa-trash"></i>
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div id="preferences" class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Preferences
+                    </h2>
+                    
+                    <div class="preferences-grid">
+                        <div class="preference-group">
+                            <h4>Notifications</h4>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <label for="emailNotifications">Email notifications</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="smsNotifications">
+                                    <label for="smsNotifications">SMS notifications</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="orderUpdates" checked>
+                                    <label for="orderUpdates">Order status updates</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="promotionalEmails">
+                                    <label for="promotionalEmails">Promotional emails</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-group">
+                            <h4>Privacy</h4>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="profileVisibility">
+                                    <label for="profileVisibility">Make profile public</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="dataSharing">
+                                    <label for="dataSharing">Allow data sharing for analytics</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="marketingCookies">
+                                    <label for="marketingCookies">Accept marketing cookies</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-group">
+                            <h4>Display</h4>
+                            <div class="form-group">
+                                <label for="language">Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone">
+                                    <option value="UTC-8">Pacific Time (UTC-8)</option>
+                                    <option value="UTC-7">Mountain Time (UTC-7)</option>
+                                    <option value="UTC-6">Central Time (UTC-6)</option>
+                                    <option value="UTC-5">Eastern Time (UTC-5)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Profile Management
+        class ProfileManager {
+            constructor() {
+                this.user = JSON.parse(localStorage.getItem('user') || '{}');
+                this.init();
+            }
+
+            init() {
+                this.checkAuthentication();
+                this.loadUserData();
+                this.setupEventListeners();
+                this.loadOrders();
+                this.loadBookings();
+            }
+
+            checkAuthentication() {
+                const token = localStorage.getItem('token');
+                if (!token || !this.user.id) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            loadUserData() {
+                // Update header info
+                document.getElementById('profileName').textContent = 
+                    `${this.user.firstName || ''} ${this.user.lastName || ''}`.trim() || this.user.username;
+                document.getElementById('profileEmail').textContent = this.user.email;
+
+                // Load form data
+                document.getElementById('firstName').value = this.user.firstName || '';
+                document.getElementById('lastName').value = this.user.lastName || '';
+                document.getElementById('email').value = this.user.email || '';
+                document.getElementById('username').value = this.user.username || '';
+                document.getElementById('phoneNumber').value = this.user.phoneNumber || '';
+                document.getElementById('addressLine1').value = this.user.address || '';
+                document.getElementById('city').value = this.user.city || '';
+                document.getElementById('zipCode').value = this.user.zipCode || '';
+
+                // Load saved preferences
+                this.loadPreferences();
+            }
+
+            setupEventListeners() {
+                // Personal info form
+                document.getElementById('personalInfoForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.savePersonalInfo();
+                });
+
+                // Address form
+                document.getElementById('addressForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveAddress();
+                });
+
+                // Password form
+                document.getElementById('passwordForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.changePassword();
+                });
+
+                // Avatar upload
+                document.getElementById('avatarInput').addEventListener('change', (e) => {
+                    this.handleAvatarUpload(e);
+                });
+            }
+
+            async savePersonalInfo() {
+                const formData = new FormData(document.getElementById('personalInfoForm'));
+                const updatedUser = {
+                    ...this.user,
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    phoneNumber: formData.get('phoneNumber'),
+                    dateOfBirth: formData.get('dateOfBirth'),
+                    gender: formData.get('gender'),
+                    emergencyContact: formData.get('emergencyContact')
+                };
+
+                try {
+                    // Update local storage
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                    this.user = updatedUser;
+                    
+                    // Update header
+                    document.getElementById('profileName').textContent = 
+                        `${updatedUser.firstName} ${updatedUser.lastName}`;
+                    
+                    this.showNotification('Personal information updated successfully!', 'success');
+                } catch (error) {
+                    this.showNotification('Failed to update personal information.', 'error');
+                }
+            }
+
+            async saveAddress() {
+                const formData = new FormData(document.getElementById('addressForm'));
+                const updatedUser = {
+                    ...this.user,
+                    address: formData.get('addressLine1'),
+                    addressLine2: formData.get('addressLine2'),
+                    city: formData.get('city'),
+                    state: formData.get('state'),
+                    zipCode: formData.get('zipCode'),
+                    country: formData.get('country')
+                };
+
+                try {
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                    this.user = updatedUser;
+                    this.showNotification('Address saved successfully!', 'success');
+                } catch (error) {
+                    this.showNotification('Failed to save address.', 'error');
+                }
+            }
+
+            async changePassword() {
+                const formData = new FormData(document.getElementById('passwordForm'));
+                const currentPassword = formData.get('currentPassword');
+                const newPassword = formData.get('newPassword');
+                const confirmPassword = formData.get('confirmPassword');
+
+                if (newPassword !== confirmPassword) {
+                    this.showNotification('New passwords do not match.', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    this.showNotification('Password must be at least 6 characters long.', 'error');
+                    return;
+                }
+
+                try {
+                    // In a real app, this would be an API call
+                    this.showNotification('Password updated successfully!', 'success');
+                    document.getElementById('passwordForm').reset();
+                } catch (error) {
+                    this.showNotification('Failed to update password.', 'error');
+                }
+            }
+
+            handleAvatarUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // In a real app, you would upload to a server
+                        this.showNotification('Avatar uploaded successfully!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            async loadOrders() {
+                try {
+                    // Simulate loading orders
+                    const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+                        .filter(order => order.customer.email === this.user.email);
+                    
+                    document.getElementById('totalOrders').textContent = orders.length;
+                    
+                    const ordersContainer = document.getElementById('ordersContainer');
+                    if (orders.length === 0) {
+                        ordersContainer.innerHTML = '<p>No orders found.</p>';
+                        return;
+                    }
+
+                    ordersContainer.innerHTML = orders.map(order => `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-id">${order.orderId}</div>
+                                <div class="order-status status-${order.paymentMethod}">${order.paymentMethod.toUpperCase()}</div>
+                            </div>
+                            <div class="order-details">
+                                <div class="order-detail">
+                                    <div class="order-detail-label">Total</div>
+                                    <div class="order-detail-value">$${order.totals.total.toFixed(2)}</div>
+                                </div>
+                                <div class="order-detail">
+                                    <div class="order-detail-label">Items</div>
+                                    <div class="order-detail-value">${order.items.length}</div>
+                                </div>
+                                <div class="order-detail">
+                                    <div class="order-detail-label">Date</div>
+                                    <div class="order-detail-value">${new Date(order.timestamp).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="order-items">
+                                <h4>Items:</h4>
+                                ${order.items.map(item => `
+                                    <div class="order-item">
+                                        <span>${item.name} x${item.quantity}</span>
+                                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                }
+            }
+
+            async loadBookings() {
+                try {
+                    // Simulate loading bookings
+                    const bookings = JSON.parse(localStorage.getItem('bookings') || '[]')
+                        .filter(booking => booking.customerEmail === this.user.email);
+                    
+                    document.getElementById('totalBookings').textContent = bookings.length;
+                    
+                    const bookingsContainer = document.getElementById('bookingsContainer');
+                    if (bookings.length === 0) {
+                        bookingsContainer.innerHTML = '<p>No bookings found.</p>';
+                        return;
+                    }
+
+                    bookingsContainer.innerHTML = bookings.map(booking => `
+                        <div class="booking-card">
+                            <div class="booking-header">
+                                <div class="booking-service">${booking.serviceName}</div>
+                                <div class="order-status status-confirmed">CONFIRMED</div>
+                            </div>
+                            <div class="booking-details">
+                                <div class="booking-detail">
+                                    <div class="order-detail-label">Date</div>
+                                    <div class="order-detail-value">${booking.bookingDate}</div>
+                                </div>
+                                <div class="booking-detail">
+                                    <div class="order-detail-label">Time</div>
+                                    <div class="order-detail-value">${booking.bookingTime}</div>
+                                </div>
+                                <div class="booking-detail">
+                                    <div class="order-detail-label">Price</div>
+                                    <div class="order-detail-value">$${booking.servicePrice.toFixed(2)}</div>
+                                </div>
+                            </div>
+                            ${booking.notes ? `<p><strong>Notes:</strong> ${booking.notes}</p>` : ''}
+                        </div>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading bookings:', error);
+                }
+            }
+
+            loadPreferences() {
+                const preferences = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+                
+                // Load notification preferences
+                document.getElementById('emailNotifications').checked = preferences.emailNotifications !== false;
+                document.getElementById('smsNotifications').checked = preferences.smsNotifications || false;
+                document.getElementById('orderUpdates').checked = preferences.orderUpdates !== false;
+                document.getElementById('promotionalEmails').checked = preferences.promotionalEmails || false;
+                
+                // Load privacy preferences
+                document.getElementById('profileVisibility').checked = preferences.profileVisibility || false;
+                document.getElementById('dataSharing').checked = preferences.dataSharing || false;
+                document.getElementById('marketingCookies').checked = preferences.marketingCookies || false;
+                
+                // Load display preferences
+                document.getElementById('language').value = preferences.language || 'en';
+                document.getElementById('timezone').value = preferences.timezone || 'UTC-5';
+            }
+
+            savePreferences() {
+                const preferences = {
+                    emailNotifications: document.getElementById('emailNotifications').checked,
+                    smsNotifications: document.getElementById('smsNotifications').checked,
+                    orderUpdates: document.getElementById('orderUpdates').checked,
+                    promotionalEmails: document.getElementById('promotionalEmails').checked,
+                    profileVisibility: document.getElementById('profileVisibility').checked,
+                    dataSharing: document.getElementById('dataSharing').checked,
+                    marketingCookies: document.getElementById('marketingCookies').checked,
+                    language: document.getElementById('language').value,
+                    timezone: document.getElementById('timezone').value
+                };
+
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                this.showNotification('Preferences saved successfully!', 'success');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                const bgColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 90px;
+                    right: 20px;
+                    background: ${bgColor};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 10000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions
+        function showProfileSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.profile-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            // Remove active class from nav items
+            document.querySelectorAll('.profile-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(section).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+        }
+
+        function triggerAvatarUpload() {
+            document.getElementById('avatarInput').click();
+        }
+
+        function resetPersonalForm() {
+            document.getElementById('personalInfoForm').reset();
+            profileManager.loadUserData();
+        }
+
+        function resetAddressForm() {
+            document.getElementById('addressForm').reset();
+            profileManager.loadUserData();
+        }
+
+        function confirmDeleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                    // In a real app, this would call an API
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('userPreferences');
+                    alert('Account deleted successfully.');
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        function savePreferences() {
+            profileManager.savePreferences();
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Initialize profile manager
+        const profileManager = new ProfileManager();
+    </script>
+</body>
+</html>

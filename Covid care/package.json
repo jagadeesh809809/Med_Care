@@ -1,0 +1,15 @@
+{
+  "name": "covid-essentials-store",
+  "version": "1.0.0",
+  "description": "COVID Essentials Store - Essential medicines and healthcare services",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx vite --port 3000",
+    "build": "npx vite build",
+    "preview": "npx vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "type": "module"
+}

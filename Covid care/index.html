@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID Essentials Store</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <div class="logo-text">
+                        <h1>COVID Essentials</h1>
+                        <p>Stay Safe, Stay Home</p>
+                    </div>
+                </div>
+                
+                <nav class="nav">
+                    <a href="#products">Products</a>
+                    <a href="#services">Services</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <button class="wishlist-btn"><i class="fas fa-heart"></i></button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <div class="auth-buttons">
+                        <!-- Auth buttons will be populated by JavaScript -->
+                    </div>
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="#products">Products</a>
+            <a href="#services">Services</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Your Safety, Our Priority</h1>
+                <p>Get essential medicines, protective equipment, and healthcare services delivered safely to your doorstep during these challenging times.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('products')">Shop Now</button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('services')">Book Services</button>
+                </div>
+            </div>
+            
+            <div class="hero-features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>100% Safe</h3>
+                    <p>Contactless delivery with safety protocols</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Fast Delivery</h3>
+                    <p>Same-day delivery for essential items</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer assistance</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Healthcare First</h3>
+                    <p>Verified medical professionals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Section Toggle -->
+            <div class="section-toggle">
+                <button class="toggle-btn active" onclick="showSection('products')">
+                    <i class="fas fa-pills"></i>
+                    Shop Products
+                </button>
+                <button class="toggle-btn" onclick="showSection('services')">
+                    <i class="fas fa-user-md"></i>
+                    Book Services
+                </button>
+            </div>
+
+            <!-- Products Section -->
+            <section id="products" class="products-section active">
+                <div class="section-header">
+                    <h2>Essential Products</h2>
+                    <div class="filters">
+                        <select id="categoryFilter" onchange="filterProducts()">
+                            <option value="all">All Products</option>
+                            <option value="masks">Face Masks</option>
+                            <option value="sanitizers">Sanitizers</option>
+                            <option value="medicines">Medicines</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="services-section">
+                <div class="section-header">
+                    <h2>Healthcare Services</h2>
+                    <p>Access professional healthcare services from the comfort of your home. Our certified professionals are here to help you stay healthy and safe.</p>
+                </div>
+                
+                <div class="services-grid" id="servicesGrid">
+                    <!-- Services will be loaded here by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-bag"></i> Shopping Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-content" id="cartContent">
+            <!-- Cart items will be loaded here -->
+        </div>
+        
+        <div class="cart-footer" id="cartFooter">
+            <!-- Cart summary will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Service Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Book Service</h3>
+                <button class="close-modal" onclick="closeBookingModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="booking-form" id="bookingForm">
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="tel" id="customerPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerEmail">Email</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookingDate">Date</label>
+                        <input type="date" id="bookingDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingTime">Time</label>
+                        <input type="time" id="bookingTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookingNotes">Additional Notes</label>
+                    <textarea id="bookingNotes" rows="3" placeholder="Any specific requirements or symptoms..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Book Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Checkout</h3>
+                <button class="close-modal" onclick="closeCheckoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="checkout-form" id="checkoutForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkoutName">Full Name</label>
+                        <input type="text" id="checkoutName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutEmail">Email</label>
+                        <input type="email" id="checkoutEmail" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkoutPhone">Phone Number</label>
+                    <input type="tel" id="checkoutPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkoutAddress">Address</label>
+                    <input type="text" id="checkoutAddress" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkoutCity">City</label>
+                        <input type="text" id="checkoutCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutZip">ZIP Code</label>
+                        <input type="text" id="checkoutZip" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <span>Credit/Debit Card</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="paymentMethod" value="cod">
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="order-summary" id="orderSummary">
+                    <!-- Order summary will be loaded here -->
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-credit-card"></i>
+                        Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h3>COVID Essentials</h3>
+                            <p>Stay Safe, Stay Home</p>
+                        </div>
+                    </div>
+                    <p>Your trusted partner for essential medicines and healthcare services during these challenging times.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Online Consultation</a></li>
+                        <li><a href="#">Medicine Delivery</a></li>
+                        <li><a href="#">COVID Testing</a></li>
+                        <li><a href="#">Mental Health Support</a></li>
+                        <li><a href="#">Emergency Services</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>support@covidessentials.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Healthcare Ave, City, ST 12345</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>24/7 Available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 COVID Essentials. All rights reserved.</p>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
